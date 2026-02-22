@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice and Text Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat-container { width: 400px; height: 600px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; }
+        #user-input { width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Voice and Text Chatbot</h1>
+    <div id="chat-container"></div>
+    <input type="text" id="user-input" placeholder="Type your message here..." />
+    <button id="send-btn">Send</button>
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        function addMessageToChat(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = sender + ': ' + message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        sendBtn.addEventListener('click', () => {
+            const message = userInput.value;
+            addMessageToChat(message, 'User');
+            userInput.value = '';
+            // Here you would handle chatbot response
+            const botResponse = 'This is a bot response.'; // Placeholder for bot's response
+            addMessageToChat(botResponse, 'Bot');
+        });
+
+        // Voice recognition
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.onresult = (event) => {
+            const speechToText = event.results[0][0].transcript;
+            userInput.value = speechToText;
+            addMessageToChat(speechToText, 'User');
+            // Placeholder for bot response again
+            const botResponse = 'This is a bot response.'; // Placeholder for bot's response
+            addMessageToChat(botResponse, 'Bot');
+        };
+
+        userInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+
+        // Start voice recognition
+        recognition.start();
+    </script>
+</body>
+</html>
